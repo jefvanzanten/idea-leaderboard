@@ -1,0 +1,1 @@
+- [ ] TODO: Empty container with text that there are no idea's in the database yet.

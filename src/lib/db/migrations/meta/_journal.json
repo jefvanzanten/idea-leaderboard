@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1770535590724,
+      "tag": "0000_slow_adam_warlock",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1770542226461,
+      "tag": "0001_far_starhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1770543254560,
+      "tag": "0002_clear_abomination",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1770562997128,
+      "tag": "0003_bitter_ares",
+      "breakpoints": true
+    }
+  ]
+}

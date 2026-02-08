@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    offline_first_tasks_demo_lib::run()
+    idea_leaderboard_lib::run()
 }

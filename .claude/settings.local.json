@@ -5,7 +5,10 @@
       "Bash(cargo check:*)",
       "Bash(where:*)",
       "Bash(echo:*)",
-      "Bash(export PATH=\"/c/Users/jvanz/.cargo/bin:$PATH\")"
+      "Bash(export PATH=\"/c/Users/jvanz/.cargo/bin:$PATH\")",
+      "WebFetch(domain:keypears.com)",
+      "WebFetch(domain:v2.tauri.app)",
+      "Bash(bun run:*)"
     ]
   }
 }
