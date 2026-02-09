@@ -1,6 +1,6 @@
 import { db } from ".";
 import { ideas as ideasTable, categories } from "$lib/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { invoke } from "@tauri-apps/api/core";
 import type { Idea } from "$lib/types";
 
@@ -17,7 +17,8 @@ export async function getAllIdeas(): Promise<Idea[]> {
       categoryName: categories.name,
     })
     .from(ideasTable)
-    .leftJoin(categories, eq(ideasTable.categoryId, categories.id));
+    .leftJoin(categories, eq(ideasTable.categoryId, categories.id))
+    .orderBy(desc(ideasTable.stars));
 
   return Promise.all(
     rows.map(async (row) => {

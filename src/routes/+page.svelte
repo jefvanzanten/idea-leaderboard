@@ -26,9 +26,9 @@
   }
 
   async function handleRateIdea(ideaId: number, stars: number) {
-    ideas = ideas.map((idea) =>
-      idea.id === ideaId ? { ...idea, stars } : idea
-    );
+    ideas = ideas
+      .map((idea) => (idea.id === ideaId ? { ...idea, stars } : idea))
+      .sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0));
     await updateIdeaRating(ideaId, stars);
   }
 
