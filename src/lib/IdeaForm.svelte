@@ -4,7 +4,7 @@
   import { invoke } from "@tauri-apps/api/core";
   import { db } from "./db";
   import { categories } from "./db/schema";
-  import RatingBar from "./RatingBar.svelte";
+  import Rating from "./Rating.svelte";
   import type { IdeaFormData, IdeaFormInitial } from "./types";
 
   let {
@@ -133,11 +133,20 @@
       {#if previewUrl}
         <div class="thumb-wrapper">
           <img src={previewUrl} alt="Cover preview" class="thumb" />
-          <button type="button" class="remove-btn" onclick={() => { selectedImagePath = null; previewUrl = null; }}>×</button>
+          <button
+            type="button"
+            class="remove-btn"
+            onclick={() => {
+              selectedImagePath = null;
+              previewUrl = null;
+            }}>×</button
+          >
         </div>
       {/if}
       {#if !previewUrl}
-        <button type="button" class="add-img-btn" onclick={pickCoverImage}>+</button>
+        <button type="button" class="add-img-btn" onclick={pickCoverImage}
+          >+</button
+        >
       {/if}
     </div>
   </div>
@@ -157,17 +166,28 @@
       {/each}
     </select>
   </div>
-  <RatingBar bind:rating />
+  <div class="row">
+    <label>Rating</label>
+    <div class="rating-wrapper">
+      <Rating bind:rating />
+    </div>
+  </div>
   <div class="row">
     <label>Album</label>
     <div class="img-row">
       {#each albumPreviewUrls as url, i}
         <div class="thumb-wrapper">
           <img src={url} alt="Album {i + 1}" class="thumb" />
-          <button type="button" class="remove-btn" onclick={() => removeAlbumImage(i)}>×</button>
+          <button
+            type="button"
+            class="remove-btn"
+            onclick={() => removeAlbumImage(i)}>×</button
+          >
         </div>
       {/each}
-      <button type="button" class="add-img-btn" onclick={pickAlbumImages}>+</button>
+      <button type="button" class="add-img-btn" onclick={pickAlbumImages}
+        >+</button
+      >
     </div>
   </div>
   <div class="row">
@@ -191,7 +211,8 @@
 
     input,
     textarea,
-    select {
+    select,
+    .rating-wrapper {
       width: 60%;
     }
 
