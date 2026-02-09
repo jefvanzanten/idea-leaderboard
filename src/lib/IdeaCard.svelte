@@ -1,7 +1,26 @@
 <script lang="ts">
   import type { Idea } from "./types";
+  import Rating from "./Rating.svelte";
 
-  let { idea, onclick }: { idea: Idea; onclick?: () => void } = $props();
+  let {
+    idea,
+    onRate,
+    onclick,
+  }: {
+    idea: Idea;
+    onRate?: (ideaId: number, stars: number) => void;
+    onclick?: () => void;
+  } = $props();
+
+  let rating = $state(idea.stars ?? 0);
+
+  $effect(() => {
+    rating = idea.stars ?? 0;
+  });
+
+  function handleRate() {
+    onRate?.(idea.id, rating);
+  }
 </script>
 
 <div class="idea-card" {onclick} role="button" tabindex="0">
@@ -18,13 +37,13 @@
     {#if idea.description}
       <p class="idea-description">{idea.description}</p>
     {/if}
-    {#if idea.stars && idea.stars > 0}
-      <div class="idea-stars">
-        {#each { length: 5 } as _, i}
-          <span class:active={i < (idea.stars ?? 0)}>★</span>
-        {/each}
-      </div>
-    {/if}
+    <div
+      class="idea-stars"
+      onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.stopPropagation()}
+    >
+      <Rating bind:rating size={16} onRate={handleRate} />
+    </div>
   </div>
 </div>
 
@@ -86,14 +105,5 @@
 
   .idea-stars {
     margin-top: 4px;
-
-    span {
-      font-size: 16px;
-      color: #555;
-
-      &.active {
-        color: gold;
-      }
-    }
   }
 </style>

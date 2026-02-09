@@ -44,3 +44,7 @@ export async function updateIdea(
 ) {
   await db.update(ideasTable).set(data).where(eq(ideasTable.id, id));
 }
+
+export async function updateIdeaRating(id: number, stars: number) {
+  await db.update(ideasTable).set({ stars }).where(eq(ideasTable.id, id));
+}

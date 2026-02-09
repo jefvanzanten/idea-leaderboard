@@ -2,13 +2,21 @@
   import type { Idea } from "./types";
   import IdeaCard from "./IdeaCard.svelte";
 
-  let { ideas, onEditIdea }: { ideas: Idea[]; onEditIdea?: (idea: Idea) => void } = $props();
+  let {
+    ideas,
+    onEditIdea,
+    onRateIdea,
+  }: {
+    ideas: Idea[];
+    onEditIdea?: (idea: Idea) => void;
+    onRateIdea?: (ideaId: number, stars: number) => void;
+  } = $props();
 </script>
 
 {#if ideas.length > 0}
   <div class="ideas-grid">
     {#each ideas as idea}
-      <IdeaCard {idea} onclick={() => onEditIdea?.(idea)} />
+      <IdeaCard {idea} onclick={() => onEditIdea?.(idea)} onRate={onRateIdea} />
     {/each}
   </div>
 {:else}

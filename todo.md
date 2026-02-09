@@ -2,6 +2,8 @@
 
 - [ ] The Rating Bar should also be on the IdeaCard and functional so it can edit the rating without the need to open the edit form.
 - [ ] The Ideas should be sorted based on rating. Descending from highest to none.
+- [ ] The cards should be more wide so the full description is readable.
+- [ ] Change the icon of the exe and android apk
 
 # Doing
 
