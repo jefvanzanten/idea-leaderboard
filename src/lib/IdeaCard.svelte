@@ -1,16 +1,11 @@
 <script lang="ts">
   import type { Idea } from "./types";
+  import { getIdeaStore } from "$lib/ideaStore.svelte";
   import Rating from "./Rating.svelte";
 
-  let {
-    idea,
-    onRate,
-    onclick,
-  }: {
-    idea: Idea;
-    onRate?: (ideaId: number, stars: number) => void;
-    onclick?: () => void;
-  } = $props();
+  let { idea }: { idea: Idea } = $props();
+
+  const store = getIdeaStore();
 
   let rating = $state(idea.stars ?? 0);
 
@@ -19,11 +14,15 @@
   });
 
   function handleRate() {
-    onRate?.(idea.id, rating);
+    store.rateIdea(idea.id, rating);
+  }
+
+  function handleClick() {
+    store.setEditingIdea(idea);
   }
 </script>
 
-<div class="idea-card" {onclick} role="button" tabindex="0">
+<div class="idea-card" onclick={handleClick} role="button" tabindex="0">
   {#if idea.thumbDataUrl}
     <img src={idea.thumbDataUrl} alt={idea.title} class="idea-thumb" />
   {:else}

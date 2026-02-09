@@ -1,41 +1,31 @@
 <script lang="ts">
-  import { invoke } from "@tauri-apps/api/core";
-  import { updateIdea } from "./db/ideaRepository";
+  import { onMount } from "svelte";
+  import { getIdeaStore } from "$lib/ideaStore.svelte";
   import IdeaForm from "./IdeaForm.svelte";
-  import type { Idea, IdeaFormData, IdeaFormInitial } from "./types";
+  import type { IdeaFormData, IdeaFormInitial } from "./types";
 
-  let { idea, onSaved }: { idea: Idea; onSaved?: () => void } = $props();
+  const store = getIdeaStore();
+
+  let dialogEl: HTMLDialogElement;
 
   let initialValues: IdeaFormInitial = $derived({
-    title: idea.title,
-    description: idea.description ?? "",
-    categoryId: idea.categoryId ?? undefined,
-    rating: idea.stars ?? 0,
-    previewUrl: idea.thumbDataUrl,
+    title: store.editingIdea?.title ?? "",
+    description: store.editingIdea?.description ?? "",
+    categoryId: store.editingIdea?.categoryId ?? undefined,
+    rating: store.editingIdea?.stars ?? 0,
+    previewUrl: store.editingIdea?.thumbDataUrl,
+  });
+
+  onMount(() => {
+    dialogEl?.showModal();
   });
 
   async function handleEdit(data: IdeaFormData) {
-    let thumbURL = idea.thumbURL;
-    if (data.selectedImagePath) {
-      thumbURL = await invoke("copy_image_to_app_data", {
-        sourcePath: data.selectedImagePath,
-      });
-    }
-
-    await updateIdea(idea.id, {
-      title: data.title,
-      description: data.description || null,
-      stars: data.rating,
-      categoryId: data.categoryId ?? null,
-      thumbURL,
-    });
-
-    (document.getElementById("editIdeaForm") as HTMLDialogElement)?.close();
-    onSaved?.();
+    await store.editCurrentIdea(data);
   }
 </script>
 
-<dialog id="editIdeaForm" class="idea-modal">
+<dialog bind:this={dialogEl} class="idea-modal" onclose={() => store.clearEditingIdea()}>
   <IdeaForm submitLabel="Opslaan" {initialValues} onSubmit={handleEdit} />
 </dialog>
 

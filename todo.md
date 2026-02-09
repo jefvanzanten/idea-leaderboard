@@ -1,7 +1,6 @@
 # Todo
 
-- [ ] Move the responsibility for editing the state of the idea to the ideacard or to a seperate logic file and keep the component dumb.
-- [ ] The Ideas should be sorted based on rating. Descending from highest to none.
+- [ ] RatingBar should be removed and Rating should be used only.
 - [ ] The cards should be more wide so the full description is readable.
 - [ ] Change the icon of the exe and android apk
 
@@ -9,6 +8,9 @@
 
 # Done
 
+- [x] The Store should not be responsible for the dialog state due to the single responsability principle of Solid. Move it to seperate logic file or +page.svelte
+- [x] The Ideas should be sorted based on rating. Descending from highest to none.
+- [x] Move the responsibility for editing the state of the idea to the ideacard or to a seperate logic file and keep the component dumb.
 - [x] The Rating Bar should also be on the IdeaCard and functional so it can edit the rating without the need to open the edit form.
 - [x] FAB button scrolls with content. Should stay at the same position.
 - [x] Change Popover to modal because the backdrop should not interact with the page.

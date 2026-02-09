@@ -1,47 +1,25 @@
 <script lang="ts">
-  import { onMount, tick } from "svelte";
+  import { onMount } from "svelte";
+  import { getIdeaStore } from "$lib/ideaStore.svelte";
   import AddIdeaForm from "$lib/AddIdeaForm.svelte";
   import EditIdeaForm from "$lib/EditIdeaForm.svelte";
-  import { getAllIdeas, updateIdeaRating } from "$lib/db/ideaRepository";
-  import FAB from "$lib/FAB.svelte";
   import IdeaList from "$lib/IdeaList.svelte";
-  import type { Idea } from "$lib/types";
+  import FAB from "$lib/FAB.svelte";
 
-  let ideas: Idea[] = $state([]);
-  let editingIdea: Idea | null = $state(null);
+  const store = getIdeaStore();
 
-  async function loadIdeas() {
-    ideas = await getAllIdeas();
-    editingIdea = null;
-  }
+  let addDialogOpen = $state(false);
 
-  function handleAddIdea() {
-    (document.getElementById("addIdeaForm") as HTMLDialogElement)?.showModal();
-  }
-
-  async function handleEditIdea(idea: Idea) {
-    editingIdea = idea;
-    await tick();
-    (document.getElementById("editIdeaForm") as HTMLDialogElement)?.showModal();
-  }
-
-  async function handleRateIdea(ideaId: number, stars: number) {
-    ideas = ideas
-      .map((idea) => (idea.id === ideaId ? { ...idea, stars } : idea))
-      .sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0));
-    await updateIdeaRating(ideaId, stars);
-  }
-
-  onMount(loadIdeas);
+  onMount(store.loadIdeas);
 </script>
 
 <main class="container">
-  <AddIdeaForm onSaved={loadIdeas} />
-  {#if editingIdea}
-    <EditIdeaForm idea={editingIdea} onSaved={loadIdeas} />
+  <AddIdeaForm open={addDialogOpen} onclose={() => (addDialogOpen = false)} />
+  {#if store.editingIdea}
+    <EditIdeaForm />
   {/if}
-  <IdeaList {ideas} onEditIdea={handleEditIdea} onRateIdea={handleRateIdea} />
-  <FAB onclick={handleAddIdea} />
+  <IdeaList />
+  <FAB onclick={() => (addDialogOpen = true)} />
 </main>
 
 <style>

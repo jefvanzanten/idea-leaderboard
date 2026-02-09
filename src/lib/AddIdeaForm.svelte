@@ -1,53 +1,29 @@
 <script lang="ts">
-  import { invoke } from "@tauri-apps/api/core";
-  import { db } from "./db";
-  import { ideas, images, ideaImages } from "./db/schema";
+  import { getIdeaStore } from "$lib/ideaStore.svelte";
   import IdeaForm from "./IdeaForm.svelte";
   import type { IdeaFormData } from "./types";
 
-  let { onSaved }: { onSaved?: () => void } = $props();
+  let { open, onclose }: { open: boolean; onclose?: () => void } = $props();
+
+  const store = getIdeaStore();
+
+  let dialogEl: HTMLDialogElement;
+
+  $effect(() => {
+    if (open) {
+      dialogEl?.showModal();
+    } else {
+      dialogEl?.close();
+    }
+  });
 
   async function handleAdd(data: IdeaFormData) {
-    let thumbURL: string | null = null;
-    if (data.selectedImagePath) {
-      thumbURL = await invoke("copy_image_to_app_data", {
-        sourcePath: data.selectedImagePath,
-      });
-    }
-
-    const [inserted] = await db
-      .insert(ideas)
-      .values({
-        title: data.title,
-        description: data.description || null,
-        stars: data.rating,
-        categoryId: data.categoryId ?? null,
-        thumbURL,
-      })
-      .returning();
-
-    for (const albumPath of data.albumPaths) {
-      const savedPath: string = await invoke("copy_image_to_app_data", {
-        sourcePath: albumPath,
-      });
-
-      const [img] = await db
-        .insert(images)
-        .values({ url: savedPath })
-        .returning();
-
-      await db.insert(ideaImages).values({
-        ideaId: inserted.id,
-        imageId: String(img.id),
-      });
-    }
-
-    (document.getElementById("addIdeaForm") as HTMLDialogElement)?.close();
-    onSaved?.();
+    await store.addIdea(data);
+    onclose?.();
   }
 </script>
 
-<dialog id="addIdeaForm" class="idea-modal">
+<dialog bind:this={dialogEl} class="idea-modal" onclose={onclose}>
   <IdeaForm submitLabel="Voeg toe" onSubmit={handleAdd} />
 </dialog>
 
