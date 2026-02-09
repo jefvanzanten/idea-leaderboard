@@ -4,7 +4,6 @@
   import { invoke } from "@tauri-apps/api/core";
   import { db } from "./db";
   import { categories } from "./db/schema";
-  import Rating from "./Rating.svelte";
   import type { IdeaFormData, IdeaFormInitial } from "./types";
 
   let {
@@ -26,7 +25,6 @@
   let title = $state("");
   let description = $state("");
   let categoryId = $state<number | undefined>(undefined);
-  let rating = $state(0);
 
   onMount(async () => {
     categoriesData = await db.select().from(categories);
@@ -40,7 +38,6 @@
       title = initialValues.title ?? "";
       description = initialValues.description ?? "";
       categoryId = initialValues.categoryId;
-      rating = initialValues.rating ?? 0;
       previewUrl = initialValues.previewUrl ?? null;
       selectedImagePath = null;
       albumPaths = [];
@@ -99,7 +96,6 @@
   function resetForm() {
     title = "";
     description = "";
-    rating = 0;
     selectedImagePath = null;
     previewUrl = null;
     albumPaths = [];
@@ -117,7 +113,6 @@
       title: title.trim(),
       description: description.trim(),
       categoryId,
-      rating,
       selectedImagePath,
       albumPaths,
     });
@@ -167,12 +162,6 @@
     </select>
   </div>
   <div class="row">
-    <label>Rating</label>
-    <div class="rating-wrapper">
-      <Rating bind:rating />
-    </div>
-  </div>
-  <div class="row">
     <label>Album</label>
     <div class="img-row">
       {#each albumPreviewUrls as url, i}
@@ -211,8 +200,7 @@
 
     input,
     textarea,
-    select,
-    .rating-wrapper {
+    select {
       width: 60%;
     }
 

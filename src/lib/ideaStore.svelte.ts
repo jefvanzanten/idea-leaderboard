@@ -2,7 +2,7 @@ import {
   getAllIdeas,
   addIdea as repoAddIdea,
   editIdea as repoEditIdea,
-  updateIdeaRating,
+  updateIdeasOrder,
 } from "$lib/db/ideaRepository";
 import type { Idea, IdeaFormData } from "$lib/types";
 
@@ -34,11 +34,21 @@ async function editCurrentIdea(data: IdeaFormData): Promise<void> {
   await loadIdeas();
 }
 
-async function rateIdea(ideaId: number, stars: number): Promise<void> {
-  ideas = ideas
-    .map((idea) => (idea.id === ideaId ? { ...idea, stars } : idea))
-    .sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0));
-  await updateIdeaRating(ideaId, stars);
+function previewIdeasOrder(nextIdeas: Idea[]): void {
+  ideas = nextIdeas.map((idea, index) => ({
+    ...idea,
+    sortIndex: index,
+  }));
+}
+
+async function reorderIdeas(nextIdeas: Idea[]): Promise<void> {
+  previewIdeasOrder(nextIdeas);
+  await updateIdeasOrder(
+    ideas.map((idea) => ({
+      id: idea.id,
+      sortIndex: idea.sortIndex,
+    })),
+  );
 }
 
 export function getIdeaStore() {
@@ -55,6 +65,7 @@ export function getIdeaStore() {
     clearEditingIdea,
     addIdea: storeAddIdea,
     editCurrentIdea,
-    rateIdea,
+    previewIdeasOrder,
+    reorderIdeas,
   };
 }

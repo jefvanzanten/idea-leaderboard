@@ -12,7 +12,6 @@
     title: store.editingIdea?.title ?? "",
     description: store.editingIdea?.description ?? "",
     categoryId: store.editingIdea?.categoryId ?? undefined,
-    rating: store.editingIdea?.stars ?? 0,
     previewUrl: store.editingIdea?.thumbDataUrl,
   });
 
@@ -25,7 +24,11 @@
   }
 </script>
 
-<dialog bind:this={dialogEl} class="idea-modal" onclose={() => store.clearEditingIdea()}>
+<dialog
+  bind:this={dialogEl}
+  class="idea-modal"
+  onclose={() => store.clearEditingIdea()}
+>
   <IdeaForm submitLabel="Opslaan" {initialValues} onSubmit={handleEdit} />
 </dialog>
 

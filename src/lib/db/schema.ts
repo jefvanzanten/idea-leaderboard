@@ -5,7 +5,7 @@ export const ideas = sqliteTable("ideas", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull().unique(),
   description: text("description"),
-  stars: integer("stars"),
+  sortIndex: integer("sort_index").notNull(),
   categoryId: integer("category_id").references(() => categories.id),
   thumbURL: text("thumb_url"),
   createdAt: text("created_at")

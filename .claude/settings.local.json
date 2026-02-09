@@ -8,7 +8,12 @@
       "Bash(export PATH=\"/c/Users/jvanz/.cargo/bin:$PATH\")",
       "WebFetch(domain:keypears.com)",
       "WebFetch(domain:v2.tauri.app)",
-      "Bash(bun run:*)"
+      "Bash(bun run:*)",
+      "Bash(adb logcat:*)",
+      "Bash(adb install:*)",
+      "Bash(adb shell am:*)",
+      "Bash(adb shell \"cat /sdcard/idea-leaderboard-tmp.db | run-as com.jvanz.idea_leaderboard sh -c ''cat > idea-leaderboard.db''\")",
+      "Bash(adb shell:*)"
     ]
   }
 }

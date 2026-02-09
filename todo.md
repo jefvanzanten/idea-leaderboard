@@ -1,5 +1,7 @@
 # Todo
 
+- [ ] Button toevoegen aan EditIdeaForm en AddIdeaForm om te sluiten.
+- [ ] IdeaForm pimpen zodat het er meer uitziet als de IdeaCard
 - [ ] RatingBar should be removed and Rating should be used only.
 - [ ] The cards should be more wide so the full description is readable.
 - [ ] Change the icon of the exe and android apk

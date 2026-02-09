@@ -1,21 +1,10 @@
 <script lang="ts">
   import type { Idea } from "./types";
   import { getIdeaStore } from "$lib/ideaStore.svelte";
-  import Rating from "./Rating.svelte";
 
   let { idea }: { idea: Idea } = $props();
 
   const store = getIdeaStore();
-
-  let rating = $state(idea.stars ?? 0);
-
-  $effect(() => {
-    rating = idea.stars ?? 0;
-  });
-
-  function handleRate() {
-    store.rateIdea(idea.id, rating);
-  }
 
   function handleClick() {
     store.setEditingIdea(idea);
@@ -36,13 +25,6 @@
     {#if idea.description}
       <p class="idea-description">{idea.description}</p>
     {/if}
-    <div
-      class="idea-stars"
-      onclick={(e) => e.stopPropagation()}
-      onkeydown={(e) => e.stopPropagation()}
-    >
-      <Rating bind:rating size={16} onRate={handleRate} />
-    </div>
   </div>
 </div>
 
@@ -54,6 +36,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.15s ease;
     cursor: pointer;
+    min-height: 300px;
 
     &:hover {
       transform: translateY(-2px);
@@ -96,13 +79,7 @@
     margin: 6px 0;
     font-size: 0.85rem;
     color: #aaa;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-
-  .idea-stars {
-    margin-top: 4px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 </style>

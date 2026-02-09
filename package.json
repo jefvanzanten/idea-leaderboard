@@ -16,7 +16,8 @@
     "tauri:android:init": "tauri android init",
     "tauri:android:dev": "tauri android dev",
     "tauri:android:build": "tauri android build",
-    "tauri:android:install": "tauri android build --debug && adb install -r src-tauri/gen/android/app/build/outputs/apk/arm64/debug/app-arm64-debug.apk",
+    "tauri:android:build:debug": "tauri android build --debug",
+    "tauri:android:install": "tauri android build --debug && adb install -r src-tauri/gen/android/app/build/outputs/apk/universal/debug/app-universal-debug.apk",
     "seed": "npx tsx scripts/seed.ts"
   },
   "license": "MIT",
@@ -25,7 +26,8 @@
     "@tauri-apps/plugin-dialog": "^2.6.0",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-sql": "^2.3.2",
-    "drizzle-orm": "^0.45.1"
+    "drizzle-orm": "^0.45.1",
+    "svelte-dnd-action": "^0.9.69"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.6",

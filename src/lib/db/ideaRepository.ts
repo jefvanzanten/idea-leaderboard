@@ -1,6 +1,11 @@
 import { db } from ".";
-import { ideas as ideasTable, categories, images, ideaImages } from "$lib/db/schema";
-import { desc, eq } from "drizzle-orm";
+import {
+  ideas as ideasTable,
+  categories,
+  images,
+  ideaImages,
+} from "$lib/db/schema";
+import { asc, eq, sql } from "drizzle-orm";
 import { invoke } from "@tauri-apps/api/core";
 import type { Idea, IdeaFormData } from "$lib/types";
 
@@ -10,7 +15,7 @@ export async function getAllIdeas(): Promise<Idea[]> {
       id: ideasTable.id,
       title: ideasTable.title,
       description: ideasTable.description,
-      stars: ideasTable.stars,
+      sortIndex: ideasTable.sortIndex,
       categoryId: ideasTable.categoryId,
       thumbURL: ideasTable.thumbURL,
       createdAt: ideasTable.createdAt,
@@ -18,17 +23,25 @@ export async function getAllIdeas(): Promise<Idea[]> {
     })
     .from(ideasTable)
     .leftJoin(categories, eq(ideasTable.categoryId, categories.id))
-    .orderBy(desc(ideasTable.stars));
+    .orderBy(asc(ideasTable.sortIndex));
 
   return Promise.all(
     rows.map(async (row) => {
       let thumbDataUrl: string | null = null;
       if (row.thumbURL) {
-        thumbDataUrl = await invoke("read_image_as_data_url", {
-          sourcePath: row.thumbURL,
-        });
+        try {
+          thumbDataUrl = await invoke("read_image_as_data_url", {
+            sourcePath: row.thumbURL,
+          });
+        } catch {
+          thumbDataUrl = null;
+        }
       }
-      return { ...row, categoryName: row.categoryName ?? undefined, thumbDataUrl };
+      return {
+        ...row,
+        categoryName: row.categoryName ?? undefined,
+        thumbDataUrl,
+      };
     }),
   );
 }
@@ -38,7 +51,6 @@ export async function updateIdea(
   data: {
     title: string;
     description: string | null;
-    stars: number;
     categoryId: number | null;
     thumbURL: string | null;
   },
@@ -46,8 +58,15 @@ export async function updateIdea(
   await db.update(ideasTable).set(data).where(eq(ideasTable.id, id));
 }
 
-export async function updateIdeaRating(id: number, stars: number) {
-  await db.update(ideasTable).set({ stars }).where(eq(ideasTable.id, id));
+export async function updateIdeasOrder(
+  order: Array<{ id: number; sortIndex: number }>,
+): Promise<void> {
+  for (const item of order) {
+    await db
+      .update(ideasTable)
+      .set({ sortIndex: item.sortIndex })
+      .where(eq(ideasTable.id, item.id));
+  }
 }
 
 export async function addIdea(data: IdeaFormData): Promise<void> {
@@ -58,14 +77,21 @@ export async function addIdea(data: IdeaFormData): Promise<void> {
     });
   }
 
+  const [orderInfo] = await db
+    .select({
+      maxSortIndex: sql<number>`coalesce(max(${ideasTable.sortIndex}), -1)`,
+    })
+    .from(ideasTable);
+  const nextSortIndex = Number(orderInfo?.maxSortIndex ?? -1) + 1;
+
   const [inserted] = await db
     .insert(ideasTable)
     .values({
       title: data.title,
       description: data.description || null,
-      stars: data.rating,
       categoryId: data.categoryId ?? null,
       thumbURL,
+      sortIndex: nextSortIndex,
     })
     .returning();
 
@@ -73,7 +99,10 @@ export async function addIdea(data: IdeaFormData): Promise<void> {
     const savedPath: string = await invoke("copy_image_to_app_data", {
       sourcePath: albumPath,
     });
-    const [img] = await db.insert(images).values({ url: savedPath }).returning();
+    const [img] = await db
+      .insert(images)
+      .values({ url: savedPath })
+      .returning();
     await db.insert(ideaImages).values({
       ideaId: inserted.id,
       imageId: String(img.id),
@@ -95,7 +124,6 @@ export async function editIdea(
   await updateIdea(id, {
     title: data.title,
     description: data.description || null,
-    stars: data.rating,
     categoryId: data.categoryId ?? null,
     thumbURL,
   });
