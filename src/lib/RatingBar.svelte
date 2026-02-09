@@ -1,15 +1,23 @@
 <script lang="ts">
   const startCount = 5;
-  let currentRating = $state(0);
+  let { rating = $bindable(0) }: { rating: number } = $props();
+  let hoverRating = $state(0);
 
-  const handleClick = () => {};
+  function handleClick(i: number) {
+    rating = i + 1;
+  }
 </script>
 
 <div class="row">
   <label for="rating-bar">Rating</label>
-  <div id="rating-bar">
+  <div id="rating-bar" onmouseleave={() => (hoverRating = 0)}>
     {#each { length: startCount } as _, i}
-      <button onclick={() => handleClick}>★</button>
+      <button
+        type="button"
+        class:active={i < (hoverRating || rating)}
+        onmouseenter={() => (hoverRating = i + 1)}
+        onclick={() => handleClick(i)}
+      >★</button>
     {/each}
   </div>
 </div>
@@ -37,7 +45,7 @@
     color: #ccc;
     cursor: pointer;
 
-    &:hover {
+    &.active {
       color: gold;
     }
   }
