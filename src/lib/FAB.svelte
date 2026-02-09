@@ -1,7 +1,8 @@
 <script lang="ts">
+  let { onclick }: { onclick?: () => void } = $props();
 </script>
 
-<button popovertarget="addIdeaForm">+</button>
+<button {onclick}>+</button>
 
 <style>
   button {
@@ -13,10 +14,9 @@
     border: none;
     border-radius: 50%;
     background-color: rgb(19, 189, 104);
-    position: absolute;
+    position: fixed;
     bottom: 1rem;
     right: 1rem;
     cursor: pointer;
-    anchor-name: --fab;
   }
 </style>
