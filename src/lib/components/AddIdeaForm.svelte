@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getIdeaStore } from "$lib/ideaStore.svelte";
-  import IdeaForm from "./components/IdeaForm.svelte";
-  import type { IdeaFormData } from "./types";
+  import IdeaForm from "./IdeaForm.svelte";
+  import type { IdeaFormData } from "../types";
 
   let { open, onclose }: { open: boolean; onclose?: () => void } = $props();
 
@@ -23,7 +23,7 @@
   }
 </script>
 
-<dialog bind:this={dialogEl} class="idea-modal" onclose={onclose}>
+<dialog bind:this={dialogEl} class="idea-modal" {onclose}>
   <IdeaForm submitLabel="Voeg toe" onSubmit={handleAdd} />
 </dialog>
 

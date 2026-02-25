@@ -4,7 +4,7 @@
   import AddIdeaForm from "$lib/AddIdeaForm.svelte";
   import EditIdeaForm from "$lib/EditIdeaForm.svelte";
   import IdeaList from "$lib/IdeaList.svelte";
-  import FAB from "$lib/FAB.svelte";
+  import FAB from "$lib/components/FAB.svelte";
 
   const store = getIdeaStore();
 

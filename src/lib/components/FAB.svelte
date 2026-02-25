@@ -11,12 +11,16 @@
     width: var(--btn-size);
     height: var(--btn-size);
     color: white;
-    border: none;
     border-radius: 50%;
+    border: none;
     background-color: rgb(19, 189, 104);
     position: fixed;
     bottom: 1rem;
     right: 1rem;
     cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
   }
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Idea } from "./types";
+  import type { Idea } from "../types";
   import { getIdeaStore } from "$lib/ideaStore.svelte";
 
   let { idea }: { idea: Idea } = $props();
@@ -11,7 +11,7 @@
   }
 </script>
 
-<div class="idea-card" onclick={handleClick} onkeydown={(e) => e.key === 'Enter' && handleClick()} role="button" tabindex="0">
+<div class="idea-card" onclick={handleClick} role="button" tabindex="0">
   {#if idea.thumbDataUrl}
     <img src={idea.thumbDataUrl} alt={idea.title} class="idea-thumb" />
   {:else}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { getIdeaStore } from "$lib/ideaStore.svelte";
-  import IdeaForm from "./components/IdeaForm.svelte";
+  import IdeaForm from "./IdeaForm.svelte";
   import type { IdeaFormData, IdeaFormInitial } from "./types";
 
   const store = getIdeaStore();
