@@ -20,3 +20,7 @@
   flex-direction: column;
   gap: 10px;
 }
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
