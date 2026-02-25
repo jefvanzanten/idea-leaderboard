@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { getIdeaStore } from "$lib/ideaStore.svelte";
-  import AddIdeaForm from "$lib/AddIdeaForm.svelte";
-  import EditIdeaForm from "$lib/EditIdeaForm.svelte";
-  import IdeaList from "$lib/IdeaList.svelte";
+  import AddIdeaForm from "$lib/components/AddIdeaForm.svelte";
+  import EditIdeaForm from "$lib/components/EditIdeaForm.svelte";
+  import IdeaList from "$lib/components/IdeaList.svelte";
   import FAB from "$lib/components/FAB.svelte";
 
   const store = getIdeaStore();
